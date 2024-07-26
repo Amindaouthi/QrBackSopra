@@ -1,21 +1,19 @@
 package com.bezkoder.spring.security.postgresql.models;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 import lombok.Getter;
 import lombok.Setter;
 
 import javax.persistence.*;
 import java.time.LocalDateTime;
-import java.util.*;
-
+import java.util.Date;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 @Getter
 @Setter
 @Entity
 @Table(name = "questions")
-
 public class Question {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -52,10 +50,7 @@ public class Question {
 
 
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    @JsonIgnore
-
-
+    @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(
             name = "question_tags",
             joinColumns = @JoinColumn(name = "question_id"),
@@ -64,11 +59,11 @@ public class Question {
     private Set<Tag> tags = new HashSet<>();
 
 
-    @OneToMany(mappedBy = "question",fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "question")
     private List<Favorite> favorites;
 
 
-    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true,fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Vote> votes = new HashSet<>();
 
 
@@ -76,20 +71,7 @@ public class Question {
     private String title;
     @Column(columnDefinition = "TEXT")
     private String content;
-    @OneToMany(mappedBy = "question",fetch = FetchType.EAGER, cascade = CascadeType.ALL, orphanRemoval = true)
+
+    @OneToMany(mappedBy = "question", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<Answer> answers = new HashSet<>();
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Question question = (Question) o;
-        return Objects.equals(id, question.id);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id);
-    }
 }
-

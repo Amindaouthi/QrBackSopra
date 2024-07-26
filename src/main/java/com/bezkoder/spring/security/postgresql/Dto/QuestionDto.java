@@ -18,7 +18,7 @@ public class QuestionDto {
     private Date updatedAt;
     private int views;
     private  Boolean userAnonymous ;
-
+    private List<AnswerDto> answers;
     private List<Map<String, Object>> favorites;
 
     private Set<String> tags;

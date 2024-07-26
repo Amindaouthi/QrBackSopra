@@ -73,6 +73,41 @@ public class QuestionServiceImp implements QuestionService{
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
+
+    public List<QuestionDto> getAllQuestions1() {
+        return questionRepository.findAll().stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+    }
+
+    private QuestionDto convertToDto(Question question) {
+        QuestionDto dto = new QuestionDto();
+        dto.setId(question.getId());
+        dto.setTitle(question.getTitle());
+        dto.setContent(question.getContent());
+        dto.setCreatedAt(question.getCreatedAt());
+        dto.setUpdatedAt(question.getUpdatedAt());
+        dto.setViews(question.getViews());
+        dto.setUserAnonymous(question.getUserAnonymous());
+
+        // Set username (if user is not null)
+        dto.setUsername(question.getUser() != null ? question.getUser().getUsername() : "Anonymous");
+
+        // Convert and set answers
+        dto.setAnswers(question.getAnswers().stream().map(this::mapAnswerToDto).collect(Collectors.toList()));
+
+
+        // Set tags
+        dto.setTags(question.getTags().stream()
+                .map(Tag::getName) // Assuming Tag has a getName() method
+                .collect(Collectors.toSet()));
+
+        // Calculate and set vote count and answer count
+        dto.setVoteCount(question.getVotes().size());
+        dto.setAnswerCount(question.getAnswers().size());
+
+        return dto;
+    }
     @Override
     public List<Question> searchQuestions(String keyword) {
         return questionRepository.searchQuestions(keyword);
@@ -83,11 +118,10 @@ public class QuestionServiceImp implements QuestionService{
 
     @Transactional
     @Override
-    public List<QuestionDto> findQuestionsByUserIdAndDateRange(Long userId, Date startDate, Date endDate) {
+    public List<Question> findQuestionsByUserIdAndDateRange(Long userId, Date startDate, Date endDate) {
         List<Question> questions = questionRepository.findByUser_MatriculeAndCreatedAtBetween(userId, startDate, endDate);
-        return questions.stream()
-                .map(this::mapToDto)
-                .collect(Collectors.toList());
+        return questionRepository.findByUser_MatriculeAndCreatedAtBetween(userId, startDate, endDate);
+
     }
     @Transactional
     @Override

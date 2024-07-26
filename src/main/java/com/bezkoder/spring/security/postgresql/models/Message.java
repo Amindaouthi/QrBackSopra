@@ -1,6 +1,7 @@
 package com.bezkoder.spring.security.postgresql.models;
 
 import javax.persistence.*;
+import java.time.LocalDateTime;
 
 @Entity
 @Table( name = "messages")
@@ -51,7 +52,15 @@ private User receiver;
 
 
 
+    @Column(nullable = false)
+    private LocalDateTime timestamp;
 
+    // constructors, getters, and setters
+
+    @PrePersist
+    protected void onCreate() {
+        timestamp = LocalDateTime.now();
+    }
 
 
 

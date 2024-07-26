@@ -23,7 +23,7 @@ public interface QuestionService {
     public Question createQuestion(QuestionRequest questionRequest, String username, MultipartFile file, List<Long> tagIds, Boolean isUserAnonymous) ;
     public void associateTagsWithQuestion(Long questionId, List<Long> tagIds);
     public void incrementViewCount(Long questionId);
-
+    List<QuestionDto> getAllQuestions1();
 
     Question updateQuestion(Long questionId, QuestionRequestWrapper questionRequestWrapper, MultipartFile file);    void deleteQuestion(Long questionId);
     Answer getAnswerById(Long questionId, Long answerId);
@@ -40,7 +40,7 @@ public interface QuestionService {
     List<Question> getQuestionsWithAnswers();
     List<Question> getQuestionsWithoutAnswers();
     List<Question> getQuestionsSortedByVotes();
-    List<QuestionDto> findQuestionsByUserIdAndDateRange(Long userId, Date startDate, Date endDate);
+    List<Question> findQuestionsByUserIdAndDateRange(Long userId, Date startDate, Date endDate);
     List<AnswerDto> findAnswersByUserIdAndDateRange(Long userId, Date startDate, Date endDate);    Map<Long, Integer> getTotalVotesForAnswers(List<Long> answerIds) ;
 
     public AnswerDto mapAnswerToDto(Answer answer);

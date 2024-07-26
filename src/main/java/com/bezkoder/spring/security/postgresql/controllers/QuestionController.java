@@ -53,19 +53,19 @@ public class QuestionController {
 
         return questionService.getAllQuestions(searchRequest);
     }
+
+    @GetMapping
+    public List<QuestionDto> getAllQuestions1() {
+        return questionService.getAllQuestions1();
+    }
     @GetMapping("/by-user-and-date")
-    public ResponseEntity<List<QuestionDto>> getQuestionsByUserIdAndDateRange(
+    public List<Question> getQuestionsByUserIdAndDateRange(
             @RequestParam Long userId,
             @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date startDate,
             @RequestParam @DateTimeFormat(pattern="yyyy-MM-dd") Date endDate) {
-        try {
-            List<QuestionDto> questions = questionService.findQuestionsByUserIdAndDateRange(userId, startDate, endDate);
-            return new ResponseEntity<>(questions, HttpStatus.OK);
-        } catch (Exception e) {
-            System.err.println("Error fetching questions: " + e.getMessage());
-            return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
-        }
+        return questionService.findQuestionsByUserIdAndDateRange(userId, startDate, endDate);
     }
+
     @PostMapping(value = "/create", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<?> createQuestion(@Valid @ModelAttribute QuestionRequestWrapper questionRequestWrapper, @AuthenticationPrincipal UserDetails userDetails) {
         String username = userDetails.getUsername();
